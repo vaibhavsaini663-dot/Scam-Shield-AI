@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en" id="appHtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ScamShield AI - Digital Safety</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+
+<header class="topbar">
+
+    <div class="brand">
+        <div class="brand-shield">✓</div>
+
+        <div>
+            <h1>Scam<span>Shield AI</span></h1>
+            <p data-i18n="tagline">Detect. Understand. Stay Safe.</p>
+        </div>
+    </div>
+
+    <div class="top-actions">
+
+        <button class="icon-btn" id="themeBtn" title="Dark / Light mode">
+            ◐
+        </button>
+
+        <div class="language-wrap">
+            <button class="language-btn" id="languageBtn" type="button">
+                ◎ &nbsp;<span id="languageLabel">English</span>&nbsp;⌄
+            </button>
+            <div class="language-menu" id="languageMenu" hidden></div>
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- ================= APP ================= -->
+
+<div class="app-layout">
+
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar" id="sidebar">
+
+        <nav class="side-nav">
+
+            <button
+                class="side-link active"
+                data-page="dashboard"
+                onclick="showPage('dashboard')"
+            >
+                <span>⌂</span>
+                <b data-i18n="dashboard">Dashboard</b>
+            </button>
+
+            <button
+                class="side-link"
+                data-page="dashboard"
+                onclick="showPage('dashboard'); focusScanner('message')"
+            >
+                <span>▣</span>
+                <b data-i18n="messageScanner">Message Scanner</b>
+            </button>
+
+            <button
+                class="side-link"
+                data-page="dashboard"
+                onclick="showPage('dashboard'); focusScanner('url')"
+            >
+                <span>🔗</span>
+                <b data-i18n="urlScanner">URL Scanner</b>
+            </button>
+
+            <button
+                class="side-link"
+                data-page="history"
+                onclick="showPage('history')"
+            >
+                <span>◷</span>
+                <b data-i18n="history">History</b>
+            </button>
+
+            <button
+                class="side-link"
+                data-page="safety"
+                onclick="showPage('safety')"
+            >
+                <span>♢</span>
+                <b data-i18n="safetyTips">Safety Tips</b>
+            </button>
+
+            <button
+                class="side-link"
+                data-page="about"
+                onclick="showPage('about')"
+            >
+                <span>ⓘ</span>
+                <b data-i18n="aboutUs">About Us</b>
+            </button>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="big-shield">
+                ✓
+            </div>
+
+            <h3 data-i18n="stayProtected">
+                Stay protected from online scams
+            </h3>
+
+            <p data-i18n="sidebarBlurb">
+                ScamShield AI uses smart AI analysis
+                to detect scams and keep you safe.
+            </p>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ================= MAIN CONTENT ================= -->
+
+    <main class="main-content">
+
+
+        <!-- ================= DASHBOARD VIEW ================= -->
+
+        <div class="page-view active" id="dashboardView">
+
+        <!-- ================= SCANNER HEADER ================= -->
+
+        <section class="scanner-area">
+
+            <div class="scanner-main">
+
+                <div class="scanner-heading">
+
+                    <h2>
+                        <span data-i18n="checkIf">Check if something is</span>
+                        <span data-i18n="scam">scam</span>
+                    </h2>
+
+                    <p data-i18n="scannerSub">
+                        Paste a message, email, job offer or link
+                        to analyze instantly.
+                    </p>
+
+                </div>
+
+
+                <div class="scanner-tabs">
+
+                    <button
+                        class="scanner-tab active"
+                        id="messageTab"
+                        onclick="setScannerType('message')"
+                        data-i18n="tabMessage"
+                    >
+                        💬 Message Scanner
+                    </button>
+
+                    <button
+                        class="scanner-tab"
+                        id="urlTab"
+                        onclick="setScannerType('url')"
+                        data-i18n="tabUrl"
+                    >
+                        🔗 URL Scanner
+                    </button>
+
+                </div>
+
+
+                <textarea
+                    id="scanInput"
+                    maxlength="2000"
+                    placeholder="Paste a message here in any language..."
+                    oninput="updateCounter()"
+                ></textarea>
+
+
+                <div class="scanner-footer">
+
+                    <span id="counter">
+                        0 / 2000
+                    </span>
+
+                    <button
+                        class="analyze-btn"
+                        onclick="analyzeContent()"
+                        data-i18n="analyze"
+                    >
+                        🔍 Analyze
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================= RISK CARD ================= -->
+
+            <div class="risk-card low" id="riskCard">
+
+                <div class="card-heading">
+                    <h3><span data-i18n="riskScore">Risk Score</span> <span>ⓘ</span></h3>
+                </div>
+
+
+                <div class="risk-gauge">
+
+                    <div class="gauge-circle" id="gaugeCircle">
+
+                        <div
+                            class="gauge-needle low"
+                            id="gaugeNeedle"
+                            style="transform: rotate(-90deg)"
+                        ></div>
+
+                        <div class="gauge-center-dot"></div>
+
+                        <div class="gauge-value">
+                            <strong id="riskNumber" class="risk-low">0</strong>
+                            <small>/100</small>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="risk-status" id="riskStatus">
+                    READY TO SCAN
+                </div>
+
+
+                <div class="risk-warning low" id="riskWarning">
+
+                    <div class="warning-icon">
+                        ✓
+                    </div>
+
+                    <p data-i18n="readyHint">
+                        Paste a message or URL, then tap Analyze.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= ANALYSIS CARDS ================= -->
+
+        <section class="analysis-grid">
+
+
+            <!-- WHY SUSPICIOUS -->
+
+            <div class="dashboard-card indicators-card">
+
+                <div class="card-title">
+                    <h3 data-i18n="why">Why is this flagged?</h3>
+                </div>
+
+
+                <div class="indicator">
+
+                    <div class="indicator-icon green">
+                        ✓
+                    </div>
+
+                    <div class="indicator-info">
+
+                        <strong data-i18n="genuineTitle">Looks genuine</strong>
+
+                        <p data-i18n="genuineDesc">
+                            No fake, money-request, or illegal patterns were found.
+                        </p>
+
+                    </div>
+
+                    <span class="risk-pill low" data-i18n="lowRisk">
+                        Low Risk
+                    </span>
+
+                </div>
+
+                <div class="indicator">
+
+                    <div class="indicator-icon red">
+                        ₹
+                    </div>
+
+                    <div class="indicator-info">
+
+                        <strong data-i18n="moneyTitle">Requests for money</strong>
+
+                        <p data-i18n="moneyDesc">
+                            The content asks for payment, fees, or a money transfer.
+                        </p>
+
+                    </div>
+
+                    <span class="risk-pill high" data-i18n="highRisk">
+                        High Risk
+                    </span>
+
+                </div>
+
+
+                <div class="indicator">
+
+                    <div class="indicator-icon red">
+                        !
+                    </div>
+
+                    <div class="indicator-info">
+
+                        <strong data-i18n="illegalTitle">Possible illegal activity</strong>
+
+                        <p data-i18n="illegalDesc">
+                            The content may involve illegal goods, fraud, or criminal activity.
+                        </p>
+
+                    </div>
+
+                    <span class="risk-pill high" data-i18n="highRisk">
+                        High Risk
+                    </span>
+
+                </div>
+
+
+                <div class="indicator">
+
+                    <div class="indicator-icon red">
+                        ⚠
+                    </div>
+
+                    <div class="indicator-info">
+
+                        <strong data-i18n="fakeTitle">Looks fake or deceptive</strong>
+
+                        <p data-i18n="fakeDesc">
+                            The message uses fake rewards, impersonation, or other scam tactics.
+                        </p>
+
+                    </div>
+
+                    <span class="risk-pill high" data-i18n="highRisk">
+                        High Risk
+                    </span>
+
+                </div>
+
+
+                <div class="indicator">
+
+                    <div class="indicator-icon green">
+                        🔗
+                    </div>
+
+                    <div class="indicator-info">
+
+                        <strong data-i18n="knownDomain">Known registered domain</strong>
+
+                        <p data-i18n="knownDomainDesc">
+                            This URL matches a well-known or official registered website.
+                        </p>
+
+                    </div>
+
+                    <span class="risk-pill low" data-i18n="lowRisk">
+                        Low Risk
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- AI EXPLANATION -->
+
+            <div class="dashboard-card explanation-card">
+
+                <div class="card-title">
+
+                    <h3>
+                        <span class="ai-icon">✦</span>
+                        <span data-i18n="aiTitle">AI Explanation</span>
+                    </h3>
+
+                </div>
+
+
+                <p class="explanation-text" id="aiExplanation" data-i18n="defaultExplain">
+
+                    Scan a message or URL. Genuine or registered sources show green Low Risk. Fake messages, money requests, or illegal content show High Risk.
+
+                </p>
+
+
+                <div class="bottom-line">
+
+                    <strong data-i18n="bottomLineLabel">Bottom Line</strong>
+
+                    <p id="bottomLine" data-i18n="defaultBottom">
+                        Waiting for a scan.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- WHAT SHOULD YOU DO -->
+
+            <div class="dashboard-card action-card">
+
+                <div class="card-title">
+                    <h3 data-i18n="whatDo">What should you do?</h3>
+                </div>
+
+
+                <div class="dont-box">
+
+                    <h3>
+                        <span>×</span>
+                        <span data-i18n="dont">Don't</span>
+                    </h3>
+
+                    <ul>
+                        <li data-i18n="dont1">Don't send money</li>
+                        <li data-i18n="dont2">Don't share personal info or OTP</li>
+                        <li data-i18n="dont3">Don't click on suspicious links</li>
+                        <li data-i18n="dont4">Don't download attachments</li>
+                    </ul>
+
+                </div>
+
+
+                <div class="do-box">
+
+                    <h3>
+                        <span>✓</span>
+                        <span data-i18n="do">Do</span>
+                    </h3>
+
+                    <ul>
+                        <li data-i18n="do1">Verify the organization from official website</li>
+                        <li data-i18n="do2">Contact them through official channels</li>
+                        <li data-i18n="do3">Report the message if possible</li>
+                        <li data-i18n="do4">Stay alert and help others stay safe</li>
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= BOTTOM SECTION ================= -->
+
+        <section class="bottom-grid">
+
+
+            <!-- RECENT SCANS -->
+
+            <div class="dashboard-card recent-card">
+
+                <div class="card-title">
+
+                    <h3 data-i18n="recent">Recent Scans</h3>
+
+                </div>
+
+
+                <div class="table-head">
+
+                    <span data-i18n="colType">Type</span>
+                    <span data-i18n="colPreview">Preview</span>
+                    <span data-i18n="colScore">Risk Score</span>
+                    <span data-i18n="colResult">Result</span>
+                    <span data-i18n="colTime">Time</span>
+                    <span></span>
+
+                </div>
+
+
+                <div id="recentScanRows"></div>
+
+                <div class="history-link" onclick="showPage('history')">
+                    <span data-i18n="viewAll">View All History →</span>
+                </div>
+
+            </div>
+
+
+            <!-- SAFETY TIP -->
+
+            <div class="dashboard-card safety-card">
+
+                <div class="card-title">
+
+                    <h3>
+                        <span data-i18n="tipTitle">💡 Safety Tip of the Day</span>
+                    </h3>
+
+                </div>
+
+
+                <div class="safety-content">
+
+                    <div>
+
+                        <p>
+                            <span data-i18n="tipText">Scammers create a sense of urgency to trick you. Take a moment to verify before you trust.</span>
+                        </p>
+
+                        <div class="safety-quick-btns">
+
+                            <button
+                                class="safety-toggle-btn dont-btn active"
+                                onclick="showSafetyPanel('dont')"
+                            >
+                                × Don't
+                            </button>
+
+                            <button
+                                class="safety-toggle-btn do-btn"
+                                onclick="showSafetyPanel('do')"
+                            >
+                                ✓ Do
+                            </button>
+
+                        </div>
+
+                        <div class="safety-panel active" id="safetyDontPanel">
+
+                            <ul>
+                                <li>Don't send money to unknown senders</li>
+                                <li>Don't share OTPs, passwords, or PINs</li>
+                                <li>Don't click suspicious links</li>
+                                <li>Don't download unexpected attachments</li>
+                            </ul>
+
+                        </div>
+
+                        <div class="safety-panel" id="safetyDoPanel">
+
+                            <ul>
+                                <li>Verify through official websites</li>
+                                <li>Contact organizations via official channels</li>
+                                <li>Report suspicious messages when possible</li>
+                                <li>Take time to verify before acting</li>
+                            </ul>
+
+                        </div>
+
+                        <button
+                            class="safety-more-btn"
+                            onclick="showPage('safety')"
+                        >
+                            <span data-i18n="learnMore">Learn More Tips →</span>
+                        </button>
+
+                    </div>
+
+
+                    <div class="tip-shield">
+                        ✓
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        </div>
+
+
+        <!-- ================= HISTORY VIEW ================= -->
+
+        <div class="page-view" id="historyView">
+
+            <section class="page-hero dashboard-card">
+
+                <div class="about-badge" data-i18n="historyBadge">Scan History</div>
+
+                <h2>
+                    <span data-i18n="historyTitle">Your previous</span>
+                    <span data-i18n="searches">searches</span>
+                </h2>
+
+                <p data-i18n="historySub">
+                    Review all your past scans — messages, URLs,
+                    risk scores, and results in one place.
+                </p>
+
+            </section>
+
+
+            <section class="history-full dashboard-card">
+
+                <div class="card-title">
+                    <h3 data-i18n="allScans">All Scans</h3>
+                    <span class="history-count" id="historyCount">0 scans</span>
+                </div>
+
+
+                <div class="table-head history-table-head">
+
+                    <span data-i18n="colType">Type</span>
+                    <span data-i18n="colPreview">Preview</span>
+                    <span data-i18n="colScore">Risk Score</span>
+                    <span data-i18n="colResult">Result</span>
+                    <span data-i18n="colTime">Time</span>
+
+                </div>
+
+
+                <div id="historyList">
+
+                    <div class="empty-history" id="emptyHistory" data-i18n="emptyHistory">
+                        No scans yet. Analyze a message or URL
+                        on the Dashboard to see history here.
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+
+        <!-- ================= SAFETY TIPS VIEW ================= -->
+
+        <div class="page-view" id="safetyView">
+
+            <section class="page-hero dashboard-card">
+
+                <div class="about-badge">Safety Tips</div>
+
+                <h2>
+                    Stay safe
+                    <span>online</span>
+                </h2>
+
+                <p>
+                    Learn what to do and what to avoid when you
+                    receive suspicious messages or links.
+                </p>
+
+            </section>
+
+
+            <section class="safety-page dashboard-card">
+
+                <div class="safety-tip-banner">
+                    <span class="tip-icon">💡</span>
+                    <p id="dailyTip">
+                        Scammers create a sense of urgency to trick you.
+                        Take a moment to verify before you trust.
+                    </p>
+                </div>
+
+
+                <div class="safety-toggle-group">
+
+                    <button
+                        class="safety-page-btn dont-btn active"
+                        id="safetyPageDontBtn"
+                        onclick="showSafetyPagePanel('dont')"
+                    >
+                        <span>×</span>
+                        <span data-i18n="notToDo">What NOT to Do</span>
+                    </button>
+
+                    <button
+                        class="safety-page-btn do-btn"
+                        id="safetyPageDoBtn"
+                        onclick="showSafetyPagePanel('do')"
+                    >
+                        <span>✓</span>
+                        <span data-i18n="toDo">What to Do</span>
+                    </button>
+
+                </div>
+
+
+                <div class="safety-page-panel active" id="safetyPageDont">
+
+                    <ul class="safety-list dont-list">
+                        <li>Don't send money to anyone you don't know or trust</li>
+                        <li>Don't share OTPs, passwords, PINs, or bank details</li>
+                        <li>Don't click links in unexpected messages or emails</li>
+                        <li>Don't download attachments from unknown senders</li>
+                        <li>Don't respond to urgent threats about account blocking</li>
+                        <li>Don't trust unexpected lottery or prize notifications</li>
+                        <li>Don't pay registration fees for job or internship offers</li>
+                        <li>Don't install apps from links sent in messages</li>
+                    </ul>
+
+                </div>
+
+
+                <div class="safety-page-panel" id="safetyPageDo">
+
+                    <ul class="safety-list do-list">
+                        <li>Verify the organization through its official website</li>
+                        <li>Contact companies using official phone numbers or emails</li>
+                        <li>Report suspicious messages to cybercrime portals</li>
+                        <li>Take time to think before making any payment</li>
+                        <li>Use ScamShield AI to scan messages before acting</li>
+                        <li>Check URLs carefully for misspellings or odd domains</li>
+                        <li>Enable two-factor authentication on important accounts</li>
+                        <li>Warn friends and family about scams you encounter</li>
+                    </ul>
+
+                </div>
+
+            </section>
+
+
+            <section class="tips-grid">
+
+                <div class="tip-card dashboard-card">
+                    <strong>🎣 Phishing</strong>
+                    <p>
+                        Fake emails and messages that look like banks or
+                        companies trying to steal your login details.
+                    </p>
+                </div>
+
+                <div class="tip-card dashboard-card">
+                    <strong>💼 Fake Jobs</strong>
+                    <p>
+                        Scammers offer jobs or internships but ask for
+                        registration or training fees upfront.
+                    </p>
+                </div>
+
+                <div class="tip-card dashboard-card">
+                    <strong>🎁 Fake Rewards</strong>
+                    <p>
+                        "You won a prize!" messages that ask you to pay
+                        a fee or share personal information to claim it.
+                    </p>
+                </div>
+
+                <div class="tip-card dashboard-card">
+                    <strong>⏰ Urgency Tricks</strong>
+                    <p>
+                        "Act now or your account will be blocked" — scammers
+                        pressure you so you don't have time to verify.
+                    </p>
+                </div>
+
+            </section>
+
+        </div>
+
+
+        <!-- ================= ABOUT US VIEW ================= -->
+
+        <div class="page-view" id="aboutView">
+
+            <section class="about-hero dashboard-card">
+
+                <div class="about-badge" data-i18n="aboutBadge">About ScamShield AI</div>
+
+                <h2>
+                    <span data-i18n="aboutTitle">Your digital safety</span>
+                    <span data-i18n="companion">companion</span>
+                </h2>
+
+                <p data-i18n="aboutIntro">
+                    ScamShield AI helps you detect, understand, and avoid online scams. Genuine or registered sources show green Low Risk. Fake, money-asking, or illegal content shows High Risk.
+                </p>
+
+            </section>
+
+
+            <section class="about-tools">
+
+                <div class="about-section-title">
+                    <h3 data-i18n="ourTools">Our Tools</h3>
+                    <p data-i18n="toolsSub">
+                        Scan messages and URLs in any supported language. Switch dark or light mode anytime.
+                    </p>
+                </div>
+
+
+                <div class="tools-grid">
+
+
+                    <div class="tool-card dashboard-card">
+
+                        <div class="tool-icon message">
+                            ▣
+                        </div>
+
+                        <h4 data-i18n="toolMessage">Message Scanner</h4>
+
+                        <p data-i18n="toolMessageP">
+                            Paste SMS, WhatsApp, email, or job offers in any language. Fake, money, or illegal content is High Risk. Genuine messages are Low Risk (green).
+                        </p>
+
+                    </div>
+
+
+                    <div class="tool-card dashboard-card">
+
+                        <div class="tool-icon url">
+                            🔗
+                        </div>
+
+                        <h4 data-i18n="toolUrl">URL Scanner</h4>
+
+                        <p data-i18n="toolUrlP">
+                            Known registered domains (banks, government, major sites) score green Low Risk. Shortened, fake, or phishing links score High Risk.
+                        </p>
+
+                    </div>
+
+
+                    <div class="tool-card dashboard-card">
+
+                        <div class="tool-icon risk">
+                            ◔
+                        </div>
+
+                        <h4 data-i18n="toolRisk">Risk Score</h4>
+
+                        <p data-i18n="toolRiskP">
+                            Genuine / registered = green Low Risk. Fake, payment requests, or illegal activity = High Risk. Medium Risk is used when some warning signs appear.
+                        </p>
+
+                    </div>
+
+
+                    <div class="tool-card dashboard-card">
+
+                        <div class="tool-icon ai">
+                            ✦
+                        </div>
+
+                        <h4>AI Explanation</h4>
+
+                        <p>
+                            Beyond a simple score, ScamShield AI explains
+                            why content looks suspicious in plain language.
+                            It highlights specific warning signs and gives
+                            you a clear bottom-line summary of what to do.
+                        </p>
+
+                    </div>
+
+
+                    <div class="tool-card dashboard-card">
+
+                        <div class="tool-icon indicators">
+                            ⚠
+                        </div>
+
+                        <h4>Scam Indicators</h4>
+
+                        <p>
+                            See exactly which patterns were detected —
+                            requests for money, urgency, suspicious links,
+                            fake recruitment, unverified senders, and more.
+                            Each indicator is labeled High, Medium, or Low
+                            risk so you know what matters most.
+                        </p>
+
+                    </div>
+
+
+                    <div class="tool-card dashboard-card">
+
+                        <div class="tool-icon actions">
+                            ✓
+                        </div>
+
+                        <h4>Do &amp; Don't Guide</h4>
+
+                        <p>
+                            Not sure how to respond? Each scan includes
+                            practical advice — what to avoid (sending money,
+                            sharing OTPs, clicking links) and what to do
+                            instead (verify through official channels,
+                            report the message, stay alert).
+                        </p>
+
+                    </div>
+
+
+                    <div class="tool-card dashboard-card">
+
+                        <div class="tool-icon history">
+                            ◷
+                        </div>
+
+                        <h4>Scan History</h4>
+
+                        <p>
+                            Your recent scans are saved on the dashboard
+                            so you can review past results anytime. Each
+                            entry shows the type, preview, risk score,
+                            and result — helping you track patterns over
+                            time.
+                        </p>
+
+                    </div>
+
+
+                    <div class="tool-card dashboard-card">
+
+                        <div class="tool-icon tips">
+                            💡
+                        </div>
+
+                        <h4>Safety Tips</h4>
+
+                        <p>
+                            Learn how to protect yourself with daily safety
+                            tips. Scammers often use urgency and fake
+                            authority to trick people — our tips help you
+                            spot these tactics before it's too late.
+                        </p>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+            <section class="about-how dashboard-card">
+
+                <h3>How It Works</h3>
+
+                <p class="about-how-intro">
+                    ScamShield AI uses a two-layer approach for reliable
+                    detection:
+                </p>
+
+                <div class="how-steps">
+
+                    <div class="how-step">
+                        <span class="step-num">1</span>
+                        <div>
+                            <strong>Local Detection</strong>
+                            <p>
+                                Rule-based analysis instantly checks for
+                                known scam patterns — money requests,
+                                urgency words, sensitive info requests,
+                                suspicious URLs, and more.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="how-step">
+                        <span class="step-num">2</span>
+                        <div>
+                            <strong>AI Analysis</strong>
+                            <p>
+                                When available, OpenAI-powered analysis
+                                provides deeper context and a human-readable
+                                explanation. Local and AI results are
+                                combined for the most accurate risk score.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <p class="about-disclaimer">
+                    ScamShield AI is a digital safety assistant, not a
+                    law enforcement or financial authority. Always verify
+                    important requests through official channels.
+                </p>
+
+            </section>
+
+        </div>
+
+    </main>
+
+</div>
+
+
+<script src="i18n.js"></script>
+<script src="script.js"></script>
+
+</body>
+</html>
